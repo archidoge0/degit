@@ -1,35 +1,30 @@
-name: Node.js CI
-
-on:
-  workflow_dispatch:
-
+name: "ghav before: Node.js CI"
+"on":
+  push:
+    branches:
+      - ghav/dev/398
+    paths:
+      - .ghav/before
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        node-version: [20.x, 22.x, 24.x]
-
+        node-version:
+          - 20.x
+          - 22.x
+          - 24.x
     steps:
       - uses: actions/checkout@v4
-
       - uses: oven-sh/setup-bun@v2
         with:
           bun-version: 1.3.14
-
       - run: bun --version
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-
       - run: bun install --frozen-lockfile
-
       - run: bun run build
-
       - run: bun run test
-
       - run: bun run lint
